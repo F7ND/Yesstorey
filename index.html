@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Inner Store</title>
+  <link rel="icon" type="image/webp" href="image/logo.webp">
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    a { text-decoration: none !important; }
+    body { font-family: 'Segoe UI', sans-serif; background:#D1F8EF; color:#333; overflow-x:hidden; }
+
+    /* Preloader */
+    #preloader {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: #A1E3F9; display: flex; justify-content: center; align-items: center;
+      z-index: 9999; transition: opacity 0.6s ease-out;
+    }
+    .loader {
+      border: 8px solid #D1F8EF; border-top: 8px solid #3674B5;
+      border-radius: 50%; width: 60px; height: 60px;
+      animation: spin 1.2s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Header */
+    .header {
+      position:fixed; top:0; width:100%; padding:15px 20px;
+      background:#3674B5; color:white; display:flex; justify-content:center; align-items:center;
+      z-index:1000; box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    }
+    .logo { height:45px; position:absolute; left:20px; }
+    .site-name { font-size:26px; font-weight:bold; }
+    .nav-menu { font-size:32px; position:absolute; right:20px; cursor:pointer; }
+
+    /* Dropdown */
+    .dropdown-menu {
+      position:absolute; top:70px; right:20px; background:#A1E3F9;
+      border-radius:12px; box-shadow:0 8px 25px rgba(0,0,0,0.2);
+      display:none; z-index:999; overflow:hidden;
+    }
+    .dropdown-menu.show { display:block; animation:fadeIn 0.4s; }
+    .dropdown-menu a {
+      display:block; padding:14px 24px; color:#3674B5; font-weight:600;
+      transition:0.3s;
+    }
+    .dropdown-menu a:hover { background:#D1F8EF; }
+
+    @keyframes fadeIn { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:none;} }
+
+    /* Slider */
+    .slider { margin:90px 20px 20px; border-radius:18px; overflow:hidden; box-shadow:0 8px 20px rgba(0,0,0,0.12); }
+    .slider-img { width:100%; height:auto; display:none; }
+    .slider-img.active { display:block; animation:zoom 10s infinite; }
+    @keyframes zoom { 0%,100%{transform:scale(1);} 50%{transform:scale(1.08);} }
+
+    /* Dots */
+    .dots { text-align:center; margin:15px 0; }
+    .dot { display:inline-block; width:12px; height:12px; margin:0 6px; background:#3674B5; border-radius:50%; opacity:0.4; cursor:pointer; transition:0.4s; }
+    .dot.active { opacity:1; transform:scale(1.4); background:#fff; box-shadow:0 0 15px #3674B5; }
+
+    /* ==================== PRODUK – TANPA SCROLL, LEBIH KECIL DI HP ==================== */
+    .products-container {
+      padding:30px 20px;
+      overflow: visible !important;
+    }
+
+    .products {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: nowrap;
+      overflow: visible; /* pastikan visible */
+      padding: 15px 0;
+      align-items:flex-start; /* agar animasi jatuh terlihat */
+    }
+
+    /* --- STATE AWAL (sebelum ) --- */
+    .product {
+      flex: 0 0 100px;
+      opacity: 0;
+      transform: translateY(-80px) rotate(-6deg);
+      /* jangan set animation di sini, supaya controllable lewat kelas animate-ready */
+    }
+
+    .product img {
+      width:100%; height:auto;
+      background:#A1E3F9;
+      padding:15px;
+      border-radius:20px;
+      box-shadow:0 6px 15px rgba(0,0,0,0.12);
+      transition:all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .product:hover img {
+      transform: translateY(-15px) scale(1.15) rotate(5deg);
+      box-shadow:0 20px 40px rgba(0,0,0,0.25);
+    }
+
+    @media (min-width: 768px) {
+      .product { flex: 0 0 160px; } /* Desktop tetap agak besar */
+      .products { gap:30px; }
+    }
+
+    /* ==================== ANIMASI PRODUK: JATUH (dipicu setelah preloader) ==================== */
+    @keyframes dropDown {
+      0% {
+        opacity: 0;
+        transform: translateY(-120px) rotate(-8deg);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(12px) rotate(2deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+      }
+    }
+
+    /* ketika body punya kelas animate-ready, jalankan animasi bertahap */
+    .animate-ready .product {
+      animation-name: dropDown;
+      animation-duration: 0.9s;
+      animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+      animation-fill-mode: forwards;
+    }
+   .animate-ready .product:nth-child(1) { animation-delay: 0.08s; }
+.animate-ready .product:nth-child(2) { animation-delay: 0.16s; }
+.animate-ready .product:nth-child(3) { animation-delay: 0.24s; }
+
+    /* Jika jumlah product berubah, beri generic delays (4..6) */
+    .animate-ready .product:nth-child(4) { animation-delay: 0.72s; }
+    .animate-ready .product:nth-child(5) { animation-delay: 0.90s; }
+
+/* ==================== PHOTO-BLOCK ==================== */
+.photo-block {
+  margin:40px 20px;
+  border-radius:24px;
+  background:#578FCA; 
+  padding:50px 30px;
+  text-align:center;
+  color:white;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  opacity:0;
+  transform: translateY(-120px);
+  font-family: 'Inter', sans-serif; /* FONT FUTURISTIK */
+}
+
+@keyframes slideDownAppear {
+  0% { opacity:0; transform:translateY(-120px); }
+  60% { opacity:1; transform:translateY(18px); }
+  100% { opacity:1; transform:translateY(0); }
+}
+
+/* JALANKAN ANIMASI */
+.animate-ready .photo-block {
+  animation-name: slideDownAppear;
+  animation-duration: 0.55s !important;
+  animation-timing-function: cubic-bezier(0.25,0.9,0.3,1);
+  animation-fill-mode: forwards;
+}
+
+/* PENTING: GUNAKAN nth-of-type LANGSUNG KE SECTION */
+/* URUTAN FIX TANPA ERROR */
+.animate-ready .photo1 {
+  animation-delay: 0s !important;     /* photo1 paling awal */
+}
+
+.animate-ready .photo2 {
+  animation-delay: 0.25s !important;   /* photo2 setelahnya */
+}
+
+    /* Photo image styling */
+    .photo-img {
+      width:100%; max-width:460px;
+      border-radius:20px;
+      margin:0 auto 25px;
+      display:block;
+      box-shadow:0 8px 20px rgba(0,0,0,0.2);
+      transition:transform 0.5s ease;
+    }
+    .photo-img:hover { transform:scale(1.05) rotate(1deg); }
+
+    @media (min-width: 768px) {
+      .photo-block {
+        margin:60px auto;
+        max-width:1100px;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        text-align:left;
+        padding:60px 80px;
+        gap:50px;
+      }
+      .photo-img { flex:1; max-width:500px; }
+      .jasa-content { flex:1; }
+      .buy-button { display:inline-block; width:auto; padding:18px 45px; }
+    }
+
+    .buy-button {
+      position: relative;
+      overflow: hidden;
+      display:block;
+      width:90%;
+      max-width:420px;
+      margin:20px auto 0;
+      padding:18px 0;
+      background:#3674B5;
+      color:white;
+      border:none;
+      border-radius:50px;
+      font-size:20px;
+      font-weight:bold;
+      cursor:pointer;
+      transition:all 0.4s;
+      animation: pulseGlow 2.5s infinite;
+    }
+    .buy-button:hover {
+      background:#2a5d94;
+      transform:translateY(-5px);
+      box-shadow:0 12px 30px rgba(54,116,181,0.5);
+    }
+    .buy-button:active { transform:translateY(-2px); }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow:0 0 15px rgba(54,116,181,0.4); }
+      50% { box-shadow:0 0 30px rgba(54,116,181,0.8); }
+    }
+
+    .buy-button::after {
+      content:'';
+      position:absolute;
+      top:50%; left:50%;
+      width:0; height:0;
+      background:rgba(255,255,255,0.3);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      transition:width 0.6s, height 0.6s;
+    }
+    .buy-button:active::after {
+      width:300px; height:300px;
+    }
+
+    .footer {
+      background:#3674B5;
+      color:white;
+      text-align:center;
+      padding:40px 20px;
+      font-size:16px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="preloader"><div class="loader"></div></div>
+
+  <header class="header">
+    <img src="image/logo.webp" alt="Logo" class="logo">
+    <div class="site-name">Inner Store</div>
+    <div class="nav-menu" id="menu-toggle">☰</div>
+  </header>
+
+  <nav class="dropdown-menu" id="dropdown-menu">
+    <ul>
+      <li><a href="index.html">Beranda</a></li>
+      <li><a href="testimoni.html">Testimoni</a></li>
+    </ul>
+  </nav>
+
+  <section class="slider" id="slider">
+    <img src="image/promo1.webp" alt="Promo 1" class="slider-img active">
+    <img src="image/promo2.webp" alt="Promo 2" class="slider-img">
+    <img src="image/promo3.webp" alt="Promo 3" class="slider-img">
+  </section>
+
+  <div class="dots">
+    <span class="dot active" onclick="currentSlide(1)"></span>
+    <span class="dot" onclick="currentSlide(2)"></span>
+    <span class="dot" onclick="currentSlide(3)"></span>
+  </div>
+
+  <!-- Produk Horizontal – TANPA SCROLL -->
+  <div class="products-container">
+    <div class="products">
+      <a href="produktt.html" class="product"><img src="image/produk1.webp" alt="Produk 1"></a>
+      <a href="produkig.html" class="product"><img src="image/produk2.webp" alt="Produk 2"></a>
+      <a href="produkyt.html" class="product"><img src="image/produk3.webp" alt="Produk 3"></a>
+    </div>
+  </div>
+
+  <!-- Jasa tetap sama -->
+  <section class="photo-block photo1">
+    <img src="image/photo1.webp" alt="Website Tanpa Coding" class="photo-img">
+    <div class="jasa-content">
+      <h2 style="font-size:24px; margin-bottom:15px;">Buat Website Tanpa Coding</h2>
+      <a href="https://api.whatsapp.com/send?phone=6287786537319&text=Saya%20Ingin%20Membuat%20Website%20Tanpa%20Coding!!%0A%0AHarga%3A%20%0A~Rp.150%2C000~%0ARp.35%2C000" target="_blank">
+        <button class="buy-button">Join Sekarang – Hanya Rp35.000</button>
+      </a>
+    </div>
+  </section>
+
+<section class="photo-block photo2">
+    <img src="image/photo2.webp" alt="Jasa Desain" class="photo-img">
+    <div class="jasa-content">
+      <h2 style="font-size:24px; margin-bottom:15px;">Jasa Desain Profesional</h2>
+      <a href="https://api.whatsapp.com/send?phone=6287786537319&text=Saya%20Ingin%20Mendesain%20Sesuatu%20Tapi%20Saya%20Kesulitan%20Untuk%20Mendesainnya%20Jadi%20Saya%20Ingin%20Membeli%20Jasa%20Desainer%20Anda%0A%0AHarga%20Minimal%3A%20~Rp.70%2C000~%0ARp.20%2C000%20%28Tergantung%20Kualitas%29" target="_blank">
+        <button class="buy-button">Pesan Jasa Desain Mulai Rp20.000</button>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    ©2025 - Inner Store<br>Terimakasih Telah Mengunjungi Situs Kami :)
+  </footer>
+
+  <script>
+    // Preloader hide -> lalu set kelas animate-ready supaya animasi berjalan
+    window.addEventListener('load', () => {
+      const pre = document.getElementById('preloader');
+      pre.style.opacity = '0';
+      setTimeout(() => {
+        pre.style.display = 'none';
+        // beri sedikit timeout agar browser reflow lalu tambahkan kelas
+        setTimeout(() => {
+          document.body.classList.add('animate-ready');
+        }, 50);
+      }, 600);
+    });
+
+    // Dropdown menu
+    document.getElementById('menu-toggle').onclick = () => {
+      document.getElementById('dropdown-menu').classList.toggle('show');
+    };
+
+    // Slider
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slider-img');
+    const dots = document.querySelectorAll('.dot');
+
+    function showSlide(n) {
+      // jika n undefined -> next
+      if (n === undefined) {
+        slideIndex = (slideIndex + 1) % slides.length;
+      } else {
+        slideIndex = n;
+      }
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === slideIndex);
+      });
+      dots.forEach((d, i) => {
+        d.classList.toggle('active', i === slideIndex);
+      });
+    }
+    function currentSlide(n) { showSlide(n-1); }
+    setInterval(() => showSlide(), 5000);
+    // inisialisasi
+    showSlide(0);
+  </script>
+</body>
+</html>

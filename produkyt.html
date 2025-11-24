@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Produk Media Sosial - Aetherversse</title>
+  <link rel="icon" type="image/png" href="image/logo.png">
+  <style>
+  /* === HEADER SLIDE-DOWN === */
+.header {
+  animation: headerDrop 0.55s ease forwards;
+}
+@keyframes headerDrop {
+  from { transform: translateY(-80px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+/* === HAMBURGER ROTATE SAAT DIKLIK === */
+.nav-menu.active svg {
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
+}
+
+/* === DROPDOWN LEBIH HALUS === */
+.dropdown-menu.show {
+  animation: dropdownFade 0.25s ease forwards;
+}
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === ANIMASI PRICE-BOX MUNCUL === */
+.price-box {
+  animation: popBox 0.5s ease forwards;
+}
+@keyframes popBox {
+  from { opacity: 0; transform: translateY(10px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* === ANIMASI PER ITEM (STAGGER EFFECT) === */
+.price-item {
+  position: relative;
+  animation: fadeSlide 0.5s ease forwards;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* === GLOW SAAT HOVER === */
+.price-item:hover {
+  background-color: #bdf1ff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  transition: 0.2s ease;
+}
+
+/* === ANIMASI TOMBOL WHATSAPP === */
+.whatsapp-btn {
+  transition: 0.25s ease;
+}
+.whatsapp-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0px 8px 16px rgba(37,211,102,0.35);
+}
+    :root {
+      --header-h: 64px;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(var(--header-h) + env(safe-area-inset-top));
+      padding-top: env(safe-area-inset-top);
+      padding-left: 16px;
+      padding-right: 16px;
+      box-sizing: border-box;
+      background: #3674B5;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      padding-top: calc(var(--header-h) + 12px + env(safe-area-inset-top));
+      font-family: Arial, sans-serif;
+      background-color: #D1F8EF;
+    }
+
+    /* === PERBESAR LOGO === */
+    .logo {
+      height: 50px; /* sebelumnya 40px */
+      position: absolute;
+      left: 16px;
+      top: calc(env(safe-area-inset-top));
+      transform: translateY(6px);
+      z-index: 5200;
+    }
+
+    /* === PERBESAR TITLE === */
+    .site-name {
+      font-size: 24px; /* sebelumnya 22px */
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    /* === HAMBURGER TANPA BORDER/BACKGROUND === */
+    .nav-menu {
+      position: absolute;
+      right: 12px;
+      top: calc(env(safe-area-inset-top));
+      transform: translateY(6px);
+      z-index: 6000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 54px;
+      height: 54px;
+      cursor: pointer;
+      border: none !important;
+      background: transparent !important; /* HILANGKAN BORDER/BACKGROUND */
+      box-shadow: none !important;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-menu:focus,
+    .nav-menu:active {
+      outline: none;
+      background: transparent !important; /* tetap transparan saat tap */
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: calc(var(--header-h) + env(safe-area-inset-top) + 6px);
+      right: 12px;
+      background: #A1E3F9;
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.18);
+      display: none;
+      z-index: 5500;
+      min-width: 160px;
+      overflow: hidden;
+    }
+    .dropdown-menu.show { display: block; animation: fadeIn 0.22s ease; }
+    .dropdown-menu a {
+      display:block;
+      padding:12px 16px;
+      color:#0E4F6B;
+      font-weight:600;
+      text-decoration:none;
+    }
+    .dropdown-menu a:hover { background:#D1F8EF; }
+
+    @keyframes fadeIn {
+      from {opacity:0; transform: translateY(-6px);}
+      to {opacity:1; transform:none;}
+    }
+
+    .section-title {
+      background-color: #3674B5;
+      color: white;
+      text-align: center;
+      padding: 12px;
+      font-size: 22px;
+      font-weight: bold;
+      border-radius: 10px;
+      margin: 20px;
+    }
+    .price-box {
+      background-color: #578FCA;
+      border-radius: 10px;
+      margin: 0 20px 25px 20px;
+      padding: 15px;
+    }
+    .price-item {
+      background-color: #A1E3F9;
+      padding: 10px;
+      margin: 8px 0;
+      text-align: center;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+    .whatsapp-btn {
+      display: inline-block;
+      width: 100%;
+      max-width: 220px;
+      margin: 10px auto 0 auto;
+      text-align: center;
+      background-color: #25D366;
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .note {
+      background-color: #3674B5;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      margin: 20px;
+      border-radius: 8px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header class="header" role="banner">
+    <img src="image/logo.webp" alt="Logo" class="logo">
+    <div class="site-name">Inner Store</div>
+
+    <button id="menu-toggle" class="nav-menu" aria-label="Buka menu" title="Menu">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none">
+        <line x1="3" y1="6" x2="21" y2="6" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="3" y1="12" x2="21" y2="12" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        <line x1="3" y1="18" x2="21" y2="18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <nav class="dropdown-menu" id="dropdown-menu">
+    <a href="index.html">Beranda</a>
+    <a href="testimoni.html">Testimoni</a>
+  </nav>
+
+  <div id="product-container"></div>
+
+  <div class="note">
+    ❗Perhatian: Harga dapat berubah kapan saja.<br>Hubungi kontak admin!
+  </div>
+
+  <script>
+    const btn = document.getElementById('menu-toggle');
+    const dd = document.getElementById('dropdown-menu');
+
+btn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  btn.classList.toggle("active");  // ← Untuk animasi rotate
+  dd.classList.toggle('show');
+});
+
+    document.addEventListener('click', () => {
+      dd.classList.remove('show');
+    });
+
+    dd.addEventListener('click', (e) => e.stopPropagation());
+
+    const priceData = {
+      youtubeLikes: {
+        title: "YouTube Likes",
+        items: [
+          { qty: "50 Likes", price: "Rp 500", note: "(Coba Dulu!)" },
+          { qty: "100 Likes", price: "Rp 1.000", note: "(Untuk Pemula!)" },
+          { qty: "500 Likes", price: "Rp 3.000", note: "(Best Deal!)" },
+          { qty: "1.000 Likes", price: "Rp 5.000", note: "(Terlaris!)" },
+          { qty: "2.000 Likes", price: "Rp 8.000" },
+          { qty: "5.000 Likes", price: "Rp 19.000" }
+        ]
+      },
+      youtubeViews: {
+        title: "YouTube Views",
+        items: [
+          { qty: "1.000 Views", price: "Rp 15.000" },
+          { qty: "5.000 Views", price: "Rp 60.000" },
+          { qty: "10.000 Views", price: "Rp 115.000" }
+        ]
+      }
+    };
+
+    const phone = "+6287786537319";
+    const container = document.getElementById("product-container");
+
+    function renderSection(data) {
+      let html = `
+        <div class="section-title">${data.title}</div>
+        <div class="price-box">
+      `;
+      data.items.forEach(item => {
+        html += `
+          <div class="price-item">
+            ${item.qty} — ${item.price} ${item.note ? item.note : ""}
+            <a 
+              class="whatsapp-btn"
+              href="https://api.whatsapp.com/send?phone=${phone}&text=Pesanan%20Saya%0A%0AKategori:%20${encodeURIComponent(data.title)}%0ATarget:%20(Akun/Link)%0AJumlah:%20${encodeURIComponent(item.qty)}%0AHarga:%20${encodeURIComponent(item.price)}">
+              Pesan Sekarang
+            </a>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      return html;
+    }
+
+    container.innerHTML =
+      renderSection(priceData.youtubeLikes) +
+      renderSection(priceData.youtubeViews);
+  </script>
+
+</body>
+</html>
